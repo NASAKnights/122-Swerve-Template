@@ -103,6 +103,7 @@ double ElevatorSubsystem::GetHeight()
 {
     if constexpr(frc::RobotBase::IsSimulation())
     {
+        // frc::SmartDashboard::PutBoolean("isSim", true);
         return m_elevatorSim.GetPosition().value();
     }
     return m_encoder.GetPosition();
@@ -132,6 +133,9 @@ void ElevatorSubsystem::printLog()
 }
 void ElevatorSubsystem::handle_Setpoint()
 {
+    frc::SmartDashboard::PutNumber("Elevator Goal Height",
+                                   GetController().GetGoal().position.value());
+    frc::SmartDashboard::PutNumber("Elevator Actual Height", GetMeasurement().value());
     // This method will be called once per scheduler run.
     switch(m_ElevatorState)
     {
@@ -159,7 +163,6 @@ void ElevatorSubsystem::SimulationPeriodic()
 }
 void ElevatorSubsystem::UseOutput(double output, State setpoint)
 {
-    frc::SmartDashboard::PutBoolean("InUseOutput", true);
     // Calculate the feedforward from the sepoint
     units::volt_t feedforward = m_feedforwardElevator.Calculate(setpoint.velocity);
     units::volt_t v           = units::volt_t{output} + feedforward;
@@ -168,4 +171,5 @@ void ElevatorSubsystem::UseOutput(double output, State setpoint)
         m_elevatorSim.SetInputVoltage(v);
     }
     m_motor.SetVoltage(v);
+    frc::SmartDashboard::PutNumber("VoltageElevator", v.value());
 }

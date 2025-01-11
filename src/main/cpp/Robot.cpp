@@ -58,7 +58,7 @@ void Robot::TeleopInit()
     m_elevator.Enable();
     using State = frc::TrapezoidProfile<units::degrees>::State;
     m_arm.SetGoal(State{units::degree_t(ArmConstants::kArmAngleExtended), 0_rad_per_s});
-    m_elevator.SetGoal(1.0_m);
+    m_elevator.SetGoal(0.0_m);
     if(m_autonomousCommand)
     {
         m_autonomousCommand->Cancel();
