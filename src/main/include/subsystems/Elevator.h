@@ -77,10 +77,14 @@ public:
     double         GetHeight();
     void           UseOutput(double output, State setpoint) override;
     units::meter_t GetMeasurement() override;
+    /*
     void           SetSpeed(double speed);
-    void           SetHeight(double height);
+    */
+    void SetHeight(double height);
+    /*
     bool           CheckGoal();
     void           Periodic();
+    */
 
 private:
     rev::CANSparkFlex         m_motor;

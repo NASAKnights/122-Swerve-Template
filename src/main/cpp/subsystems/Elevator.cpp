@@ -38,7 +38,7 @@ ElevatorSubsystem::ElevatorSubsystem()
     m_holdHeight    = 0.0;
     m_ElevatorState = ElevatorConstants::ElevatorState::HOLD;
 }
-
+/*
 void ElevatorSubsystem::Periodic()
 {
     // This method will be called once per scheduler run.
@@ -59,6 +59,7 @@ void ElevatorSubsystem::Periodic()
     }
     printLog();
 }
+*/
 
 void ElevatorSubsystem::SetHeight(double height)
 {
@@ -88,6 +89,7 @@ void ElevatorSubsystem::SetHeight(double height)
     }
 }
 
+/*
 void ElevatorSubsystem::SetSpeed(double speed)
 {
     if(m_ElevatorState == ElevatorConstants::ElevatorState::MANUAL)
@@ -95,6 +97,7 @@ void ElevatorSubsystem::SetSpeed(double speed)
         m_motor.Set(speed);
     }
 }
+*/
 
 double ElevatorSubsystem::GetHeight()
 {
@@ -109,12 +112,12 @@ units::meter_t ElevatorSubsystem::GetMeasurement()
 {
     return units::meter_t{GetHeight()};
 }
-
+/*
 bool ElevatorSubsystem::CheckGoal()
 {
     return m_ElevatorState == ElevatorConstants::ElevatorState::HOLD;
 }
-
+*/
 void ElevatorSubsystem::printLog()
 {
     frc::SmartDashboard::PutNumber("ELEVATOR_ENC_ABS", GetMeasurement().value());
@@ -127,7 +130,26 @@ void ElevatorSubsystem::printLog()
     m_MotorCurrentLog.Append(m_motor.GetOutputCurrent());
     m_MotorVoltageLog.Append(m_motor.GetAppliedOutput());
 }
-void ElevatorSubsystem::handle_Setpoint() {}
+void ElevatorSubsystem::handle_Setpoint()
+{
+    // This method will be called once per scheduler run.
+    switch(m_ElevatorState)
+    {
+        case ElevatorConstants::LIFT:
+            frc::SmartDashboard::PutString("State", "LIFT");
+            break;
+        case ElevatorConstants::LOWER:
+            frc::SmartDashboard::PutString("State", "LOWER");
+            break;
+        case ElevatorConstants::MANUAL:
+            frc::SmartDashboard::PutString("State", "MANUAL");
+            break;
+        case ElevatorConstants::HOLD:
+            frc::SmartDashboard::PutString("State", "HOLD");
+            break;
+    }
+    printLog();
+}
 
 void ElevatorSubsystem::Emergency_Stop() {}
 

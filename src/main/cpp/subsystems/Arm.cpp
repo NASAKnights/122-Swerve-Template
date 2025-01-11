@@ -55,6 +55,7 @@ void ArmSubsystem::SimulationPeriodic()
 }
 void ArmSubsystem::UseOutput(double output, State setpoint)
 {
+    frc::SmartDashboard::PutBoolean("ArmInUseOutput", true);
     // Calculate the feedforward from the sepoint
     units::volt_t feedforward = m_feedforward.Calculate(setpoint.position, setpoint.velocity);
     if constexpr(frc::RobotBase::IsSimulation())
