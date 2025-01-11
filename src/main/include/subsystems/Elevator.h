@@ -59,9 +59,9 @@ static constexpr auto kFFkA = 0.01_V / 1.0_mps_sq; // volts*s^2/meters
 
 static constexpr units::second_t kDt = 20_ms;
 
-static constexpr double kElevatorGearing    = 5;
-static constexpr auto   kCarriageMass       = 10_kg;
-static constexpr auto   kElevatorDrumRadius = 0.1_m;
+static constexpr double kElevatorGearing    = 50;
+static constexpr auto   kCarriageMass       = 5_kg;
+static constexpr auto   kElevatorDrumRadius = 0.01_m;
 }
 
 class ElevatorSubsystem : public frc2::ProfiledPIDSubsystem<units::meter>
@@ -83,31 +83,19 @@ public:
     void           Periodic();
 
 private:
-    rev::CANSparkFlex m_motor;
-    // frc::ElevatorFeedforward          m_feedforwardElevator;
-    wpi::log::DoubleLogEntry          m_HeightLog;
-    wpi::log::DoubleLogEntry          m_SetPointLog;
-    wpi::log::IntegerLogEntry         m_StateLog;
-    wpi::log::DoubleLogEntry          m_MotorCurrentLog;
-    wpi::log::DoubleLogEntry          m_MotorVoltageLog;
-    ctre::phoenix6::hardware::Pigeon2 elevator_pigeon{10}; //, "NKCANivore"};
-    frc::Timer*                       m_timer;
-    rev::SparkRelativeEncoder         m_encoder;
+    rev::CANSparkFlex         m_motor;
+    frc::ElevatorFeedforward  m_feedforwardElevator;
+    wpi::log::DoubleLogEntry  m_HeightLog;
+    wpi::log::DoubleLogEntry  m_SetPointLog;
+    wpi::log::IntegerLogEntry m_StateLog;
+    wpi::log::DoubleLogEntry  m_MotorCurrentLog;
+    wpi::log::DoubleLogEntry  m_MotorVoltageLog;
+    frc::Timer*               m_timer;
+    rev::SparkRelativeEncoder m_encoder;
 
     frc::Timer m_simTimer;
 
     frc::sim::ElevatorSim m_elevatorSim;
-    double                m_offset = 0.0;
-
-    frc::TrapezoidProfile<units::meters>::Constraints m_constraints{
-        ElevatorConstants::kMaxVelocity, ElevatorConstants::kMaxAcceleration};
-
-    frc::ProfiledPIDController<units::meters> m_controller{
-        ElevatorConstants::kP, ElevatorConstants::kI, ElevatorConstants::kD, m_constraints,
-        ElevatorConstants::kDt};
-    frc::ElevatorFeedforward m_feedforwardElevator{
-        ElevatorConstants::kFFks, ElevatorConstants::kFFkg, ElevatorConstants::kFFkV,
-        ElevatorConstants::kFFkA};
 
     double m_holdHeight;
 

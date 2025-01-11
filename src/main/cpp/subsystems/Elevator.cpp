@@ -20,6 +20,8 @@ ElevatorSubsystem::ElevatorSubsystem()
     , m_motor(ElevatorConstants::kMotorId, rev::CANSparkLowLevel::MotorType::kBrushless)
     , m_encoder{m_motor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor,
                                    ElevatorConstants::kEncoderPulsePerRev)}
+    , m_feedforwardElevator{ElevatorConstants::kFFks, ElevatorConstants::kFFkg,
+                            ElevatorConstants::kFFkV, ElevatorConstants::kFFkA}
     , m_elevatorSim(frc::DCMotor::NeoVortex(1), ElevatorConstants::kElevatorGearing,
                     ElevatorConstants::kCarriageMass, ElevatorConstants::kElevatorDrumRadius,
                     ElevatorConstants::lowerLimit, ElevatorConstants::upperLimit, true, 0_m, {0.01})
@@ -43,12 +45,16 @@ void ElevatorSubsystem::Periodic()
     switch(m_ElevatorState)
     {
         case ElevatorConstants::LIFT:
+            frc::SmartDashboard::PutString("State", "LIFT");
             break;
         case ElevatorConstants::LOWER:
+            frc::SmartDashboard::PutString("State", "LOWER");
             break;
         case ElevatorConstants::MANUAL:
+            frc::SmartDashboard::PutString("State", "MANUAL");
             break;
         case ElevatorConstants::HOLD:
+            frc::SmartDashboard::PutString("State", "HOLD");
             break;
     }
     printLog();
@@ -96,7 +102,7 @@ double ElevatorSubsystem::GetHeight()
     {
         return m_elevatorSim.GetPosition().value();
     }
-    return m_encoder.GetPosition() + m_offset;
+    return m_encoder.GetPosition();
 }
 
 units::meter_t ElevatorSubsystem::GetMeasurement()
@@ -131,11 +137,13 @@ void ElevatorSubsystem::SimulationPeriodic()
 }
 void ElevatorSubsystem::UseOutput(double output, State setpoint)
 {
+    frc::SmartDashboard::PutBoolean("InUseOutput", true);
     // Calculate the feedforward from the sepoint
     units::volt_t feedforward = m_feedforwardElevator.Calculate(setpoint.velocity);
+    units::volt_t v           = units::volt_t{output} + feedforward;
     if constexpr(frc::RobotBase::IsSimulation())
     {
-        m_elevatorSim.SetInputVoltage(units::volt_t{output} + feedforward);
+        m_elevatorSim.SetInputVoltage(v);
     }
-    m_motor.SetVoltage(units::volt_t{output} + feedforward);
+    m_motor.SetVoltage(v);
 }
