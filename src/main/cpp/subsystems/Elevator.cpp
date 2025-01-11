@@ -38,28 +38,13 @@ ElevatorSubsystem::ElevatorSubsystem()
     m_holdHeight    = 0.0;
     m_ElevatorState = ElevatorConstants::ElevatorState::HOLD;
 }
-/*
-void ElevatorSubsystem::Periodic()
+
+void ElevatorSubsystem::HoldPosition()
 {
-    // This method will be called once per scheduler run.
-    switch(m_ElevatorState)
-    {
-        case ElevatorConstants::LIFT:
-            frc::SmartDashboard::PutString("State", "LIFT");
-            break;
-        case ElevatorConstants::LOWER:
-            frc::SmartDashboard::PutString("State", "LOWER");
-            break;
-        case ElevatorConstants::MANUAL:
-            frc::SmartDashboard::PutString("State", "MANUAL");
-            break;
-        case ElevatorConstants::HOLD:
-            frc::SmartDashboard::PutString("State", "HOLD");
-            break;
-    }
-    printLog();
+    m_controller.SetTolerance(ElevatorConstants::kTolerancePos, ElevatorConstants::kToleranceVel);
+    m_controller.SetGoal(units::meter_t{GetHeight()});
+    m_ElevatorState = ElevatorConstants::ElevatorState::HOLD;
 }
-*/
 
 void ElevatorSubsystem::SetHeight(double height)
 {
@@ -133,6 +118,11 @@ void ElevatorSubsystem::printLog()
 }
 void ElevatorSubsystem::handle_Setpoint()
 {
+    // check if at goal
+    if(m_ElevatorState != ElevatorConstants::ElevatorState::HOLD && m_controller.AtGoal())
+    {
+        m_ElevatorState = ElevatorConstants::ElevatorState::HOLD;
+    }
     frc::SmartDashboard::PutNumber("Elevator Goal Height",
                                    GetController().GetGoal().position.value());
     frc::SmartDashboard::PutNumber("Elevator Actual Height", GetMeasurement().value());
@@ -140,16 +130,16 @@ void ElevatorSubsystem::handle_Setpoint()
     switch(m_ElevatorState)
     {
         case ElevatorConstants::LIFT:
-            frc::SmartDashboard::PutString("State", "LIFT");
+            frc::SmartDashboard::PutString("ElevState", "LIFT");
             break;
         case ElevatorConstants::LOWER:
-            frc::SmartDashboard::PutString("State", "LOWER");
+            frc::SmartDashboard::PutString("ElevState", "LOWER");
             break;
         case ElevatorConstants::MANUAL:
-            frc::SmartDashboard::PutString("State", "MANUAL");
+            frc::SmartDashboard::PutString("ElevState", "MANUAL");
             break;
         case ElevatorConstants::HOLD:
-            frc::SmartDashboard::PutString("State", "HOLD");
+            frc::SmartDashboard::PutString("ElevState", "HOLD");
             break;
     }
     printLog();
@@ -171,5 +161,7 @@ void ElevatorSubsystem::UseOutput(double output, State setpoint)
         m_elevatorSim.SetInputVoltage(v);
     }
     m_motor.SetVoltage(v);
-    frc::SmartDashboard::PutNumber("VoltageElevator", v.value());
+    frc::SmartDashboard::PutNumber("Elev_UO_PID", output);
+    frc::SmartDashboard::PutNumber("Elev_UO_FF", feedforward.value());
+    frc::SmartDashboard::PutNumber("Elev_UO_Volt", v.value());
 }

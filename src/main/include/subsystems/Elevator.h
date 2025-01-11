@@ -37,22 +37,22 @@ enum ElevatorState
 
 const auto                                          upperLimit       = 3_m;
 const auto                                          lowerLimit       = 0_m;
-static constexpr units::meters_per_second_t         kMaxVelocity     = 1.0_mps;
-static constexpr units::meters_per_second_squared_t kMaxAcceleration = 0.5_mps_sq;
-static constexpr double                             kP               = 0.6; // 10.0
-static constexpr double                             kI               = 0.0; // 10.0
+static constexpr units::meters_per_second_t         kMaxVelocity     = 2.0_mps;
+static constexpr units::meters_per_second_squared_t kMaxAcceleration = 1.0_mps_sq;
+static constexpr double                             kP               = 100.0; // 0.6
+static constexpr double                             kI               = 0.0;   // 10.0
 static constexpr double                             kD               = 0.0;
 static constexpr units::volt_t                      kS = 0.2_V; // minimum voltage to move motor
 
-static constexpr units::meter_t             kTolerancePos = 0.001_m;
-static constexpr units::meters_per_second_t kToleranceVel = 0.001_mps;
+static constexpr units::meter_t             kTolerancePos = 0.01_m;
+static constexpr units::meters_per_second_t kToleranceVel = 0.01_mps;
 
 const int kMotorId            = 6;
 const int kEncoderPulsePerRev = 42;
 
 static constexpr auto kFFks = 0.23_V;             // Volts static (motor)
 static constexpr auto kFFkg = 0.28_V;             // Volts
-static constexpr auto kFFkV = 12.0_V / 1.0_mps;   // volts*s/meters //1.01
+static constexpr auto kFFkV = 3.0_V / 1.0_mps;    // volts*s/meters //1.01
 static constexpr auto kFFkA = 1.0_V / 1.0_mps_sq; // volts*s^2/meters //0.1
 
 static constexpr units::second_t kDt = 20_ms;
@@ -75,6 +75,7 @@ public:
     double         GetHeight();
     void           UseOutput(double output, State setpoint) override;
     units::meter_t GetMeasurement() override;
+    void           HoldPosition();
     /*
     void           SetSpeed(double speed);
     */
