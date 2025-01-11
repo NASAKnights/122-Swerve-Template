@@ -37,6 +37,8 @@ enum ElevatorState
 
 const auto                                          upperLimit       = 3_m;
 const auto                                          lowerLimit       = 0_m;
+const auto                                          simUpperLimit    = 3.05_m;
+const auto                                          simLowerLimit    = -0.05_m;
 static constexpr units::meters_per_second_t         kMaxVelocity     = 2.0_mps;
 static constexpr units::meters_per_second_squared_t kMaxAcceleration = 1.0_mps_sq;
 static constexpr double                             kP               = 100.0; // 0.6
@@ -45,7 +47,7 @@ static constexpr double                             kD               = 0.0;
 static constexpr units::volt_t                      kS = 0.2_V; // minimum voltage to move motor
 
 static constexpr units::meter_t             kTolerancePos = 0.01_m;
-static constexpr units::meters_per_second_t kToleranceVel = 0.01_mps;
+static constexpr units::meters_per_second_t kToleranceVel = 0.05_mps;
 
 const int kMotorId            = 6;
 const int kEncoderPulsePerRev = 42;

@@ -151,27 +151,23 @@ void Robot::BindCommands()
                 return;
             }))));
 
+    frc2::JoystickButton(&m_driverController, 2)
+        .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
+            [this]
+            {
+                frc::SmartDashboard::PutBoolean("elevatoring_up", true);
+                m_elevator.SetHeight(ElevatorConstants::upperLimit.value());
+                return;
+            })));
+
     frc2::JoystickButton(&m_driverController, 3)
         .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
             [this]
             {
-                frc::SmartDashboard::PutBoolean("elevatoring", true);
-                if(m_elevator.GetHeight() <= ElevatorConstants::lowerLimit.value())
-                {
-                    m_elevator.SetHeight(ElevatorConstants::upperLimit.value());
-                }
-                else if(m_elevator.GetHeight() >= ElevatorConstants::upperLimit.value())
-                {
-                    m_elevator.SetHeight(ElevatorConstants::lowerLimit.value());
-                }
+                frc::SmartDashboard::PutBoolean("elevatoring_down", true);
+                m_elevator.SetHeight(ElevatorConstants::lowerLimit.value());
                 return;
-            })))
-        .OnFalse((frc2::CommandPtr(frc2::InstantCommand(
-            [this]
-            {
-                frc::SmartDashboard::PutBoolean("elevatoring", false);
-                return;
-            }))));
+            })));
 }
 
 frc2::CommandPtr Robot::GetAutonomousCommand()

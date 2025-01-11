@@ -24,7 +24,8 @@ ElevatorSubsystem::ElevatorSubsystem()
                             ElevatorConstants::kFFkV, ElevatorConstants::kFFkA}
     , m_elevatorSim(frc::DCMotor::NeoVortex(1), ElevatorConstants::kElevatorGearing,
                     ElevatorConstants::kCarriageMass, ElevatorConstants::kElevatorDrumRadius,
-                    ElevatorConstants::lowerLimit, ElevatorConstants::upperLimit, true, 0_m, {0.01})
+                    ElevatorConstants::simLowerLimit, ElevatorConstants::simUpperLimit, true, 0_m,
+                    {0.01})
 {
     wpi::log::DataLog& log = frc::DataLogManager::GetLog();
     m_HeightLog            = wpi::log::DoubleLogEntry(log, "/Elevator/Angle");
