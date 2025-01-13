@@ -42,7 +42,7 @@ const auto                                          simLowerLimit    = -0.05_m;
 static constexpr units::meters_per_second_t         kMaxVelocity     = 2.0_mps;
 static constexpr units::meters_per_second_squared_t kMaxAcceleration = 1.0_mps_sq;
 static constexpr double                             kP               = 100.0; // 0.6
-static constexpr double                             kI               = 0.0;   // 10.0
+static constexpr double                             kI               = 50.0;  // 0.0
 static constexpr double                             kD               = 0.0;
 static constexpr units::volt_t                      kS = 0.2_V; // minimum voltage to move motor
 
@@ -53,7 +53,7 @@ const int kMotorId            = 6;
 const int kEncoderPulsePerRev = 42;
 
 static constexpr auto kFFks = 0.23_V;             // Volts static (motor)
-static constexpr auto kFFkg = 0.28_V;             // Volts
+static constexpr auto kFFkg = 0.0_V;              // Volts
 static constexpr auto kFFkV = 3.0_V / 1.0_mps;    // volts*s/meters //1.01
 static constexpr auto kFFkA = 1.0_V / 1.0_mps_sq; // volts*s^2/meters //0.1
 
