@@ -69,7 +69,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
     m_arm.handle_Setpoint();
-    m_elevator.handle_Setpoint();
+    // m_elevator.handle_Setpoint();
 }
 
 void Robot::TeleopExit()
@@ -155,19 +155,51 @@ void Robot::BindCommands()
         .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
             [this]
             {
-                frc::SmartDashboard::PutBoolean("elevatoring_up", true);
+                frc::SmartDashboard::PutBoolean("lifting elevator", true);
                 m_elevator.SetHeight(ElevatorConstants::upperLimit.value());
                 return;
             })));
-
+    /*
+    .OnFalse((frc2::CommandPtr(frc2::InstantCommand(
+        [this]
+        {
+            frc::SmartDashboard::PutBoolean("lifting elevator", false);
+            return;
+        }))));
+    */
     frc2::JoystickButton(&m_driverController, 3)
         .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
             [this]
             {
-                frc::SmartDashboard::PutBoolean("elevatoring_down", true);
+                frc::SmartDashboard::PutBoolean("lowering elevator", true);
                 m_elevator.SetHeight(ElevatorConstants::lowerLimit.value());
                 return;
             })));
+    /*
+    .OnFalse((frc2::CommandPtr(frc2::InstantCommand(
+        [this]
+        {
+            frc::SmartDashboard::PutBoolean("lowering elevator", false);
+            return;
+        }))));
+    */
+    /*
+    frc2::JoystickButton(&m_driverController, 4)
+        .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
+            [this]
+            {
+                frc::SmartDashboard::PutBoolean("controlled elevator", true);
+                m_elevator.SetSpeed();
+                return;
+            }
+        )))
+        .OnFalse((frc2::CommandPtr(frc2::InstantCommand(
+            [this]
+            {
+                frc::SmartDashboard::PutBoolean("controlled elevator", false);
+                return;
+            }))));
+    */
 }
 
 frc2::CommandPtr Robot::GetAutonomousCommand()

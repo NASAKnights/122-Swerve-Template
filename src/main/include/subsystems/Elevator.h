@@ -59,9 +59,14 @@ static constexpr auto kFFkA = 1.0_V / 1.0_mps_sq; // volts*s^2/meters //0.1
 
 static constexpr units::second_t kDt = 20_ms;
 
-static constexpr double kElevatorGearing    = 10;
-static constexpr auto   kCarriageMass       = 5_kg;
-static constexpr auto   kElevatorDrumRadius = 0.1_m;
+// gearing between motor and drum
+static constexpr double kElevatorGearing = 10;
+// effective carriage mass: carriage mass = m
+// maths: 1 stage = 1/1 * m1, 2 stage = 1/2 * m1 + 2/2 * m2, 3 stage = 1/3 * m1 + 2/3 * m2 + 3/3 *
+// m3 highest number stage = carriage
+static constexpr auto kCarriageMass = 5_kg;
+// effective drum radius = radius of first stage * number of stages
+static constexpr auto kElevatorDrumRadius = 0.1_m;
 }
 
 class ElevatorSubsystem : public frc2::ProfiledPIDSubsystem<units::meter>
@@ -70,8 +75,8 @@ class ElevatorSubsystem : public frc2::ProfiledPIDSubsystem<units::meter>
 
 public:
     ElevatorSubsystem();
-    void           printLog();
-    void           handle_Setpoint();
+    void printLog();
+    // void           handle_Setpoint();
     void           Emergency_Stop();
     void           SimulationPeriodic();
     double         GetHeight();
@@ -82,10 +87,9 @@ public:
     void           SetSpeed(double speed);
     */
     void SetHeight(double height);
-    /*
-    bool           CheckGoal();
-    void           Periodic();
-    */
+    // bool           CheckGoal();
+    void Periodic();
+    // void SetSpeed(double speed);
 
 private:
     rev::CANSparkFlex         m_motor;
@@ -103,6 +107,9 @@ private:
     frc::sim::ElevatorSim m_elevatorSim;
 
     double m_holdHeight;
+    // double numStages;
+    // double numMotors;
+    //  units::meter_t elevatorDrumRadius;
 
     ElevatorConstants::ElevatorState m_ElevatorState;
 };
