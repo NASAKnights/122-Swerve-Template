@@ -16,16 +16,16 @@ ElevatorSubsystem::ElevatorSubsystem()
           ElevatorConstants::kP, ElevatorConstants::kI, ElevatorConstants::kD,
           frc::TrapezoidProfile<units::meter>::Constraints(ElevatorConstants::kMaxVelocity,
                                                            ElevatorConstants::kMaxAcceleration),
-          5_ms))
+          20_ms))
     , m_motor(ElevatorConstants::kMotorId, rev::CANSparkLowLevel::MotorType::kBrushless)
     , m_encoder{m_motor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor,
                                    ElevatorConstants::kEncoderPulsePerRev)}
     , m_feedforwardElevator{ElevatorConstants::kFFks, ElevatorConstants::kFFkg,
                             ElevatorConstants::kFFkV, ElevatorConstants::kFFkA}
-    , m_elevatorSim(frc::DCMotor::NeoVortex(1), ElevatorConstants::kElevatorGearing,
-                    ElevatorConstants::kCarriageMass, ElevatorConstants::kElevatorDrumRadius,
-                    ElevatorConstants::simLowerLimit, ElevatorConstants::simUpperLimit, true, 0_m,
-                    {0.01})
+    , m_elevatorSim(frc::DCMotor::NeoVortex(ElevatorConstants::kNumMotors),
+                    ElevatorConstants::kElevatorGearing, ElevatorConstants::kCarriageMass,
+                    ElevatorConstants::kElevatorDrumRadius, ElevatorConstants::simLowerLimit,
+                    ElevatorConstants::simUpperLimit, false, 0_m, {0.001})
 {
     wpi::log::DataLog& log = frc::DataLogManager::GetLog();
     m_HeightLog            = wpi::log::DoubleLogEntry(log, "/Elevator/Angle");
@@ -114,6 +114,7 @@ void ElevatorSubsystem::printLog()
                                    GetController().GetGoal().position.value());
     frc::SmartDashboard::PutNumber("/Elevator/ELEVATOR_setpoint",
                                    GetController().GetSetpoint().position.value());
+    frc::SmartDashboard::PutNumber("/Elevator/SimCurrent", m_elevatorSim.GetCurrentDraw().value());
     m_HeightLog.Append(GetMeasurement().value());
     m_SetPointLog.Append(GetController().GetSetpoint().position.value());
     m_StateLog.Append(m_ElevatorState);
@@ -156,9 +157,16 @@ void ElevatorSubsystem::handle_Setpoint()
 */
 void ElevatorSubsystem::Emergency_Stop() {}
 
+void ElevatorSubsystem::SimulationInit()
+{
+    m_simTimer.Restart();
+}
+
 void ElevatorSubsystem::SimulationPeriodic()
 {
-    m_elevatorSim.Update(5_ms);
+    // m_elevatorSim.Update(m_simTimer.Get());
+    m_elevatorSim.Update(ElevatorConstants::kDt);
+    m_simTimer.Reset();
 }
 void ElevatorSubsystem::UseOutput(double output, State setpoint)
 {
