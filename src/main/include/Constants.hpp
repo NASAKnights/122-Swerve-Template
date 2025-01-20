@@ -88,13 +88,13 @@ namespace DriveConstants
     // // ^ Module 4 ^ //
 
     // ------------------------- MODULE OFFSETS -------------------------
-    const frc::Rotation2d kFrontLeftOffset{-units::degree_t{-40 - 1.5 - 1.3}};
-    // ^ Module 1 ^ //
-    const frc::Rotation2d kFrontRightOffset{-units::degree_t{75 + 2.5 + 1.3 - 1}};
-    // ^ Module 2 ^ //
-    const frc::Rotation2d kBackLeftOffset{-units::degree_t{-129 - 30 + 24 + 2}};
-    // ^ Module 3 ^ //
-    const frc::Rotation2d kBackRightOffset{-units::degree_t{178 - 5.5 - 27 - 1 - 1.5}};
+    // const frc::Rotation2d kFrontLeftOffset{-units::degree_t{-40 - 1.5 - 1.3}};
+    // // ^ Module 1 ^ //
+    // const frc::Rotation2d kFrontRightOffset{-units::degree_t{75 + 2.5 + 1.3 - 1}};
+    // // ^ Module 2 ^ //
+    // const frc::Rotation2d kBackLeftOffset{-units::degree_t{-129 - 30 + 24 + 2}};
+    // // ^ Module 3 ^ //
+    // const frc::Rotation2d kBackRightOffset{-units::degree_t{178 - 5.5 - 27 - 1 - 1.5}};
     // ^ Module 4 ^ //
 
     // ------------------------- MODULE OFFSETS -------------------------

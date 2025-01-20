@@ -89,33 +89,33 @@ SwerveDrive::SwerveDrive()
     );
 }
 
-void SwerveDrive::InitPreferences()
-{
-    frc::Preferences::InitDouble(DriveConstants::kBackLeftOffsetKey,
-                                 DriveConstants::kBackRightOffset.Radians().value());
-}
+// void SwerveDrive::InitPreferences()
+// {
+//     frc::Preferences::InitDouble(DriveConstants::kBackLeftOffsetKey,
+//                                  DriveConstants::kBackRightOffset.Radians().value());
+// }
 
-void SwerveDrive::GetPrefernces()
-{
-    auto kBackLeftOffsetDouble = frc::Preferences::GetDouble(DriveConstants::kBackLeftOffsetKey,
-                                                             DriveConstants::kBackRightOffset.Radians().value());
+// void SwerveDrive::GetPrefernces()
+// {
+//     auto kBackLeftOffsetDouble = frc::Preferences::GetDouble(DriveConstants::kBackLeftOffsetKey,
+//                                                              DriveConstants::kBackRightOffset.Radians().value());
 
-    modules = std::array<SwerveModule, 4>{
-        {SwerveModule(ElectricalConstants::kFrontLeftDriveMotorID, ElectricalConstants::kFrontLeftTurnMotorID,
-                      ElectricalConstants::kFrontLeftEncoderID, DriveConstants::kFrontLeftOffset),
-         SwerveModule(ElectricalConstants::kFrontRightDriveMotorID, ElectricalConstants::kFrontRightTurnMotorID,
-                      ElectricalConstants::kFrontRightEncoderID, DriveConstants::kFrontRightOffset),
-         SwerveModule(ElectricalConstants::kBackLeftDriveMotorID, ElectricalConstants::kBackLeftTurnMotorID,
-                      ElectricalConstants::kBackLeftEncoderID, DriveConstants::kBackLeftOffset),
-         SwerveModule(ElectricalConstants::kBackRightDriveMotorID, ElectricalConstants::kBackRightTurnMotorID,
-                      ElectricalConstants::kBackRightEncoderID, DriveConstants::kBackRightOffset)}};
+//     modules = std::array<SwerveModule, 4>{
+//         {SwerveModule(ElectricalConstants::kFrontLeftDriveMotorID, ElectricalConstants::kFrontLeftTurnMotorID,
+//                       ElectricalConstants::kFrontLeftEncoderID, DriveConstants::kFrontLeftOffset),
+//          SwerveModule(ElectricalConstants::kFrontRightDriveMotorID, ElectricalConstants::kFrontRightTurnMotorID,
+//                       ElectricalConstants::kFrontRightEncoderID, DriveConstants::kFrontRightOffset),
+//          SwerveModule(ElectricalConstants::kBackLeftDriveMotorID, ElectricalConstants::kBackLeftTurnMotorID,
+//                       ElectricalConstants::kBackLeftEncoderID, DriveConstants::kBackLeftOffset),
+//          SwerveModule(ElectricalConstants::kBackRightDriveMotorID, ElectricalConstants::kBackRightTurnMotorID,
+//                       ElectricalConstants::kBackRightEncoderID, DriveConstants::kBackRightOffset)}};
 
-    m_poseEstimator = frc::SwerveDrivePoseEstimator<4U>{
-        kSwerveKinematics,
-        frc::Rotation2d(units::degree_t{m_pigeon.GetAngle()}),
-        {modules[0].GetPosition(), modules[1].GetPosition(), modules[2].GetPosition(), modules[3].GetPosition()},
-        frc::Pose2d()};
-}
+//     m_poseEstimator = frc::SwerveDrivePoseEstimator<4U>{
+//         kSwerveKinematics,
+//         frc::Rotation2d(units::degree_t{m_pigeon.GetAngle()}),
+//         {modules[0].GetPosition(), modules[1].GetPosition(), modules[2].GetPosition(), modules[3].GetPosition()},
+//         frc::Pose2d()};
+// }
 
 // This method will be called once per scheduler run
 void SwerveDrive::Periodic()
@@ -395,20 +395,23 @@ void SwerveDrive::ShuffleboardInit()
 
 void SwerveDrive::SetOffsets()
 {
+    frc::SmartDashboard::SetDefaultNumber("FrontLeftDegree", 0);
     auto FrontLeftDegree = frc::SmartDashboard::GetNumber("FrontLeftDegree", 0);
     frc::SmartDashboard::SetPersistent("FrontLeftDegree");
     frc::Rotation2d kFrontLeftOffset{-units::degree_t{FrontLeftDegree}};
 
+    frc::SmartDashboard::SetDefaultNumber("FrontRightDegree", 0);
     auto FrontRightDegree = frc::SmartDashboard::GetNumber("FrontRightDegree", 0);
     frc::SmartDashboard::SetPersistent("FrontRightDegree");
     frc::Rotation2d kFrontRightOffset{-units::degree_t{FrontRightDegree}};
 
+    frc::SmartDashboard::SetDefaultNumber("BackLeftDegree", 0);
     auto BackLeftDegree = frc::SmartDashboard::GetNumber("BackLeftDegree", 0);
     frc::SmartDashboard::SetPersistent("BackLeftDegree");
     frc::Rotation2d kBackLeftOffset{-units::degree_t{BackLeftDegree}};
 
-    auto BackRightDegree = frc::SmartDashboard::GetNumber("BackRightDegree", 0);
     frc::SmartDashboard::SetPersistent("BackRightDegree");
+    auto BackRightDegree = frc::SmartDashboard::GetNumber("BackRightDegree", 0);
     frc::Rotation2d kBackRightOffset{-units::degree_t{BackRightDegree}};
     std::vector<frc::Rotation2d> offsets = {kFrontLeftOffset, kFrontRightOffset, kBackLeftOffset,
                                             kBackRightOffset};
