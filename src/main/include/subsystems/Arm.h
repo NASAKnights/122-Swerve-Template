@@ -54,6 +54,8 @@ const int    kArmContinuousCurrentLimit = 35;
 const int    kArmPeakCurrentLimit       = 60;
 const double kArmPeakCurrentDuration    = 0.1;
 
+const std::array<double, 1> kSimNoise = {0.0087};
+
 const double kArmAngleStarting  = 0.0;   // With offset
 const double kArmAngleRetracted = 45.0;  // With offset
 const double kArmAngleExtended  = -40.0; // with offset
@@ -109,7 +111,7 @@ private:
 
     frc::Timer m_simTimer;
 
-    frc::sim::SingleJointedArmSim m_jointArm;
+    frc::sim::SingleJointedArmSim m_ArmSim;
 
     hal::SimDouble m_armSimVelocity;
     hal::SimDouble m_armSimposition;

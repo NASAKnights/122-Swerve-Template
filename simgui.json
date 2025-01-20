@@ -1,8 +1,30 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
+    "Timing": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875
+      }
     }
   },
   "NetworkTables": {
@@ -33,9 +55,6 @@
       }
     }
   },
-  "NetworkTables Info": {
-    "visible": true
-  },
   "Plot": {
     "Plot <0>": {
       "plots": [
@@ -52,7 +71,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": 392,
           "series": [
             {
               "color": [
@@ -65,18 +84,15 @@
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <1>": {
       "plots": [
         {
           "axis": [
             {
-              "max": 180.0,
-              "min": -180.0
+              "max": -38.0,
+              "min": -42.0
             }
           ],
           "backgroundColor": [
@@ -85,7 +101,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 338,
+          "height": 246,
           "series": [
             {
               "color": [
@@ -97,6 +113,19 @@
               "id": "NT:/SmartDashboard/Arm Actual Angle"
             }
           ]
+        }
+      ]
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 332
         }
       ]
     }
