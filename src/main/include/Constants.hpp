@@ -72,6 +72,30 @@ namespace DriveConstants
 
     const units::radians_per_second_t kMaxRotationalVelocity{4}; // Add to shuffleboard
     const bool kIsFieldRelative = true;
+    // double FrontLeftDegree  = -42.8;  //  -40 - 1.5 - 1.3
+    // double FrontRightDegree = 77.8;   //  75 + 2.5 + 1.3 - 1
+    // double BackLeftDegree   = -133.0; //  -129 - 30 + 24 + 2
+    // double BackRightDegree  = 143.0;  //  178 - 5.5 - 27 - 1 - 1.5
+
+    // ------------------------- MODULE OFFSETS -------------------------
+    // const frc::Rotation2d kFrontLeftOffset{units::degree_t{-FrontLeftDegree}};
+    // // ^ Module 1 ^ //
+    // const frc::Rotation2d kFrontRightOffset{units::degree_t{-FrontRightDegree}};
+    // // ^ Module 2 ^ //
+    // const frc::Rotation2d kBackLeftOffset{units::degree_t{-BackLeftDegree}};
+    // // ^ Module 3 ^ //
+    // const frc::Rotation2d kBackRightOffset{units::degree_t{-BackRightDegree}};
+    // // ^ Module 4 ^ //
+
+    // ------------------------- MODULE OFFSETS -------------------------
+    const frc::Rotation2d kFrontLeftOffset{-units::degree_t{-40 - 1.5 - 1.3}};
+    // ^ Module 1 ^ //
+    const frc::Rotation2d kFrontRightOffset{-units::degree_t{75 + 2.5 + 1.3 - 1}};
+    // ^ Module 2 ^ //
+    const frc::Rotation2d kBackLeftOffset{-units::degree_t{-129 - 30 + 24 + 2}};
+    // ^ Module 3 ^ //
+    const frc::Rotation2d kBackRightOffset{-units::degree_t{178 - 5.5 - 27 - 1 - 1.5}};
+    // ^ Module 4 ^ //
 
     // ------------------------- MODULE OFFSETS -------------------------
     const frc::Rotation2d kFrontLeftOffset{-units::degree_t{-40 - 1.5 - 1.3}}; // Add to shuffleboard

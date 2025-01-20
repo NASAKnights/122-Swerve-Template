@@ -66,6 +66,7 @@ public:
   void GetPrefernces();
 
   std::array<frc::SwerveModulePosition, 4> GetModulePositions();
+  void SetOffsets();
 
   void ResetPose(frc::Pose2d position);
 

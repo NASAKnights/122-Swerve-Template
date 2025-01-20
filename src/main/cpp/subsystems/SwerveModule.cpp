@@ -90,6 +90,8 @@ SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
   steerConfig.Feedback.RotorToSensorRatio = kTurnGearRatio;
   steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
+  // Mission Failed, We'll get them next time;
+
   m_driveMotor.GetConfigurator().Apply(driveConfig);
   m_steerMotor.GetConfigurator().Apply(steerConfig);
   m_steerEncoder.GetConfigurator().Apply(CANcoderConfig);
@@ -174,4 +176,17 @@ frc::Rotation2d SwerveModule::GetRotation()
 frc::Rotation2d SwerveModule::GetAbsoluteRotation()
 {
   return units::radian_t{m_steerEncoder.GetAbsolutePosition().GetValue()};
+}
+
+void SwerveModule::SetOffset(frc::Rotation2d offset)
+{
+  m_angleOffset = offset;
+  configs::CANcoderConfiguration CANcoderConfig{};
+  CANcoderConfig.MagnetSensor.AbsoluteSensorRange =
+      signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
+  CANcoderConfig.MagnetSensor.SensorDirection =
+      signals::SensorDirectionValue::CounterClockwise_Positive;
+  CANcoderConfig.MagnetSensor.MagnetOffset = units::turn_t{m_angleOffset.Degrees()}.value();
+
+  m_steerEncoder.GetConfigurator().Apply(CANcoderConfig);
 }

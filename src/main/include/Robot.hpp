@@ -25,16 +25,13 @@
 
 #include "subsystems/SwerveDrive.hpp"
 
-
-#include "util/NKTrajectoryManager.hpp"
-
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
 
 #include <cmath>
 
-
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot
+{
 public:
   Robot();
 
@@ -62,7 +59,7 @@ private:
   // Subsystems
   SwerveDrive m_swerveDrive;
 
-  frc::PowerDistribution m_pdh = frc::PowerDistribution{1,frc::PowerDistribution::ModuleType::kRev};
+  frc::PowerDistribution m_pdh = frc::PowerDistribution{1, frc::PowerDistribution::ModuleType::kRev};
 
   // PS4 controllers
   frc::Joystick m_driverController{DriveConstants::kDriverPort};

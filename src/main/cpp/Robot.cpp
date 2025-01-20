@@ -2,13 +2,13 @@
 
 #include "Robot.hpp"
 
-
 Robot::Robot() { this->CreateRobot(); }
 
 // This function is called during startup
-void Robot::RobotInit(){
+void Robot::RobotInit()
+{
   frc::DataLogManager::Start();
-  wpi::log::DataLog& log = frc::DataLogManager::GetLog();
+  wpi::log::DataLog &log = frc::DataLogManager::GetLog();
   m_VoltageLog = wpi::log::DoubleLogEntry(log, "/PDP/Voltage");
   m_CurrentLog = wpi::log::DoubleLogEntry(log, "/PDP/Current");
   m_PowerLog = wpi::log::DoubleLogEntry(log, "/PDP/Power");
@@ -30,8 +30,7 @@ void Robot::RobotPeriodic()
 
 // This function is called once each time the robot enters Disabled mode.
 void Robot::DisabledInit()
-{ 
-
+{
 }
 
 void Robot::AutonomousInit()
@@ -62,12 +61,10 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-
 }
 
 void Robot::TeleopExit()
 {
-
 }
 
 /**
@@ -122,31 +119,47 @@ void Robot::CreateRobot()
 void Robot::BindCommands()
 {
 
-// --------------DRIVER BUTTONS----------------------------------
+  // --------------DRIVER BUTTONS----------------------------------
   frc2::JoystickButton(&m_driverController, 1)
       .OnTrue(frc2::CommandPtr(frc2::InstantCommand([this]
                                                     { return m_swerveDrive.ResetHeading(); })));
 
-// --------------OPERATOR BUTTONS--------------------------------
+  // --------------OPERATOR BUTTONS--------------------------------
   /* frc2::JoystickButton(&m_operatorController, 1)
       .OnTrue(frc2::CommandPtr(frc2::InstantCommand([this]
-                                                    { return exampleCommandHere(); }))); 
+                                                    { return exampleCommandHere(); })));
+  Example Button */
+  frc2::JoystickButton(&m_driverController, 13)
+      .OnTrue(
+          frc2::CommandPtr(frc2::InstantCommand([this]
+                                                { return m_swerveDrive.SetOffsets(); })));
+
+  frc2::JoystickButton(&m_driverController, 5)
+      .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
+          [this]
+          {
+            m_swerveDrive.Drive(
+                frc::ChassisSpeeds(0_mps, 0_mps, units::radians_per_second_t(0.01)));
+          })));
+
+  // --------------OPERATOR BUTTONS--------------------------------
+  /* frc2::JoystickButton(&m_operatorController, 1)
+      .OnTrue(frc2::CommandPtr(frc2::InstantCommand([this]
+                                                    { return exampleCommandHere(); })));
   Example Button */
 }
 
 frc2::CommandPtr Robot::GetAutonomousCommand()
 {
- 2+2-1; {}
+  return frc2::InstantCommand().ToPtr();
 }
 
 void Robot::DisabledPeriodic()
 {
-  
 }
 
 void Robot::UpdateDashboard()
 {
-
 }
 
 #ifndef RUNNING_FRC_TESTS

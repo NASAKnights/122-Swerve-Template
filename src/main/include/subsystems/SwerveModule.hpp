@@ -39,6 +39,7 @@ public:
   void InitEncoder(int encoderID);
   frc::Rotation2d GetRotation();
   frc::Rotation2d GetAbsoluteRotation();
+  void SetOffset(frc::Rotation2d offset);
   void Reset();
 
 private:
