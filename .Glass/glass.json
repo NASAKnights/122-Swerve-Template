@@ -1,0 +1,26 @@
+{
+  "NetworkTables": {
+    "persistent": {
+      "SmartDashboard": {
+        "open": false
+      }
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "Elevator": {
+          "open": false
+        },
+        "Wrist": {
+          "open": false
+        },
+        "open": false
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)"
+  }
+}
