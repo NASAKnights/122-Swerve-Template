@@ -45,17 +45,17 @@ void Robot::RobotPeriodic()
 
     frc::Pose2d pose = frc::Pose2d(units::length::meter_t{0.0}, units::length::meter_t{0.0}, frc::Rotation2d{});
 
-    frc::Pose3d stageOne3dPOS = frc::Pose3d(pose.X(), pose.Y(), units::length::meter_t(m_elevator.GetHeight()) / 2, frc::Rotation3d(pose.Rotation()));
-    frc::Pose3d carage3dPOS = frc::Pose3d(pose.X(), pose.Y(), units::length::meter_t(m_elevator.GetHeight()), frc::Rotation3d(pose.Rotation()));
-    frc::Pose3d wrist3dPOS = frc::Pose3d(0.28_m, 0_m, units::length::meter_t(m_elevator.GetHeight() + 0.595), frc::Rotation3d(units::angle::radian_t{0.0}, units::angle::radian_t{-m_wrist.GetMeasurement()}, units::angle::radian_t{0.0}));
-    frc::Pose3d climb3dPOS = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0.0_rad, 0.0_rad, 0.0_rad));
-    std::vector<frc::Pose3d> modelPoses = {
-        stageOne3dPOS,
-        carage3dPOS,
-        wrist3dPOS,
-        climb3dPOS,
-    };
-    modelPosePublisher.Set(modelPoses, 0);
+    // frc::Pose3d stageOne3dPOS = frc::Pose3d(pose.X(), pose.Y(), units::length::meter_t(m_elevator.GetHeight()) / 2, frc::Rotation3d(pose.Rotation()));
+    // frc::Pose3d carage3dPOS = frc::Pose3d(pose.X(), pose.Y(), units::length::meter_t(m_elevator.GetHeight()), frc::Rotation3d(pose.Rotation()));
+    // frc::Pose3d wrist3dPOS = frc::Pose3d(0.28_m, 0_m, units::length::meter_t(m_elevator.GetHeight() + 0.595), frc::Rotation3d(units::angle::radian_t{0.0}, units::angle::radian_t{-m_wrist.GetMeasurement()}, units::angle::radian_t{0.0}));
+    // frc::Pose3d climb3dPOS = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0.0_rad, 0.0_rad, 0.0_rad));
+    // std::vector<frc::Pose3d> modelPoses = {
+    //     stageOne3dPOS,
+    //     carage3dPOS,
+    //     wrist3dPOS,
+    //     climb3dPOS,
+    // };
+    // modelPosePublisher.Set(modelPoses, 0);
 }
 
 // This function is called once each time the robot enters Disabled mode.
@@ -228,12 +228,12 @@ void Robot::CreateRobot()
         },
         {&m_swerveDrive}));
 
-    AddPeriodic([this]
-                { m_elevator.Periodic(); },
-                5_ms, 1_ms);
-    AddPeriodic([this]
-                { m_wrist.Periodic(); },
-                10_ms, 2_ms);
+    // AddPeriodic([this]
+    //             { m_elevator.Periodic(); },
+    //             5_ms, 1_ms);
+    // AddPeriodic([this]
+    //             { m_wrist.Periodic(); },
+    //             10_ms, 2_ms);
 
     // Configure the button bindings
     BindCommands();
