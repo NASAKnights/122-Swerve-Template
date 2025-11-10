@@ -1,0 +1,3 @@
+[submodule "RobotModels"]
+	path = RobotModels
+	url = https://github.com/NASAKnights/RobotModels.git

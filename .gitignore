@@ -110,9 +110,6 @@ Temporary Items
 !.vscode/launch.json
 !.vscode/extensions.json
 
-### Clang Formatting ###
-!.clang-format
-
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -172,7 +169,10 @@ out/
 .fleet
 
 # Simulation GUI and other tools window save file
+networktables.json
+simgui.json
 *-window.json
+simgui-ds.json
 
 # Simulation data log directory
 logs/
@@ -180,4 +180,9 @@ logs/
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
 
-.cache
+# clangd
+/.cache
+compile_commands.json
+
+# Eclipse generated file for annotation processors
+.factorypath

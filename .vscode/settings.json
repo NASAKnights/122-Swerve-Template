@@ -94,20 +94,33 @@
     "variant": "cpp",
     "xstddef": "cpp",
     "xtr1common": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "expected": "cpp",
+    "source_location": "cpp",
+    "version": "cpp",
+    "charconv": "cpp",
+    "format": "cpp",
+    "ios": "cpp",
+    "locale": "cpp",
+    "xfacet": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "xmemory": "cpp",
+    "xstring": "cpp",
+    "coroutine": "cpp",
+    "filesystem": "cpp",
+    "queue": "cpp",
+    "stack": "cpp",
+    "xhash": "cpp",
+    "xtree": "cpp"
   },
   "C_Cpp.errorSquiggles": "enabled",
-  "C_Cpp.formatting": "clangFormat",
-  "C_Cpp.clang_format_style": "file:${workspaceFolder}/.vscode/.clang-format",
-  "editor.defaultFormatter": "ms-vscode.cpptools",
   "editor.formatOnSave": true,
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-  }
+  "wpilib.selectDefaultSimulateExtension": false
 }
