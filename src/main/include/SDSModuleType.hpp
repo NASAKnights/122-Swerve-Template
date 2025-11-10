@@ -4,11 +4,10 @@
 
 struct SDSModuleType
 {
-
     double wheelDiameter;
     double driveReduction;
-    bool   driveInverted;
+    bool driveInverted;
 
     double steerReduction;
-    bool   steerInverted;
+    bool steerInverted;
 };

@@ -96,10 +96,6 @@ namespace DriveConstants
     inline constexpr std::string_view kBackRightOffsetKey = "kBackRightOffset";
     // ^ Module 4 ^ //
 
-    // double Number;
-
-    // const frc::Rotation2d kFrontLeftOffset{-units::degree_t{Number}}; // Add to shuffleboard
-
     const frc::Translation2d kFrontLeftPosition =
         frc::Translation2d(units::meter_t{kTrackwidthMeters / 2.0},
                            units::meter_t{kWheelbaseMeters / 2.0});

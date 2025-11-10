@@ -63,8 +63,6 @@ public:
     void SimulationInit() override;
     void SimulationPeriodic() override;
 
-    // For Testing
-
 private:
     // Have it empty by default so that if testing teleop it
     // doesn't have undefined behavior and potentially crash.
@@ -93,7 +91,7 @@ private:
     nt::StructArrayPublisher<frc::Pose3d> modelPosePublisher;
     nt::NetworkTableInstance networkTableInst;
 
-    std::string targetKey = "POI/POIREEF";
+    std::string targetKey = "POI/Calibration POIs";
     std::string prevAuto = "";
 
     frc::PowerDistribution m_pdh =
