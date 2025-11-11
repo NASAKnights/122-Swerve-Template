@@ -5,7 +5,9 @@
 #include <optional>
 
 #include "frc/DataLogManager.h"
+#include "utils/POIGenerator.h"
 #include "wpi/DataLog.h"
+#include <frc/AnalogInput.h>
 #include <frc/Joystick.h>
 #include <frc/PowerDistribution.h>
 #include <frc/TimedRobot.h>

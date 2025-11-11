@@ -93,10 +93,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic() {}
 
-void Robot::AutonomousExit()
-{
-    // m_elevator.Disable();
-}
+void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit()
 {
@@ -253,68 +250,38 @@ void Robot::BindCommands()
             frc2::InstantCommand([this]
                                  { return m_swerveDrive.ResetHeading(); })));
 
-    // frc2::JoystickButton(&m_driverController, 5)
-    //     .WhileTrue(RunCoralOuttake(&m_CoralIntake).ToPtr());
-
-    // frc2::JoystickButton(&m_driverController, 2)
-    //     .OnTrue(frc2::CommandPtr(
-    //         frc2::InstantCommand([this]
-    //                              { return m_swerveDrive.SetOffsets(); })));
-
-    // frc2::JoystickButton(&m_driverController, 3)
-    // .WhileTrue(GoToPoint(&m_swerveDrive, &m_poiGenerator).ToPtr());
-
-    frc2::JoystickButton(&m_driverController, 3)
-        .OnTrue(scoreClosest.get())
-        .OnFalse(frc2::CommandPtr(
-            frc2::InstantCommand([this]
-                                 { return m_pathfind.Cancel(); })));
-
-    // frc2::JoystickButton(&m_driverController, 3)
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             frc::SmartDashboard::PutBoolean("lifting elevator", true);
-    //             m_elevator.SetHeight(ElevatorConstants::upperLimit.value());
-    //             return;
-    //         })));
-
-    // frc2::JoystickButton(&m_driverController, 4)
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             frc::SmartDashboard::PutBoolean("lowering elevator", true);
-    //             m_elevator.SetHeight(ElevatorConstants::lowerLimit.value());
-    //             return;
-    //         })));
-
-    // frc2::JoystickButton(&m_driverController, 7)
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             m_wrist.SetAngle(25);
-    //             return;
-    //         })))
-    //     .OnFalse((frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             m_wrist.SetAngle(60);
-    //             return;
-    //         }))));
-
     // --------------OPERATOR BUTTONS--------------------------------
     /* frc2::JoystickButton(&m_operatorController, 1)
         .OnTrue(frc2::CommandPtr(frc2::InstantCommand([this]
                                                       { return exampleCommandHere(); })));
     Example Button */
 
-    // frc2::POVButton(&m_operatorController, 0) // Zero wrist
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             m_elevator.Zero();
-    //             return;
-    //         })));
+    // Square
+    frc2::JoystickButton(&m_operatorController, 1);
+    // Cross
+    frc2::JoystickButton(&m_operatorController, 2);
+    // Circle
+    frc2::JoystickButton(&m_operatorController, 3);
+    // Triangle
+    frc2::JoystickButton(&m_operatorController, 4);
+    // Left Bumper
+    frc2::JoystickButton(&m_operatorController, 5);
+    // Right Bumper
+    frc2::JoystickButton(&m_operatorController, 6);
+
+    // Left Trigger
+    frc2::JoystickButton(&m_operatorController, 7);
+
+    // Right Trigger
+    frc2::JoystickButton(&m_operatorController, 8);
+
+    // Share
+    frc2::JoystickButton(&m_operatorController, 9);
+    // Option
+    frc2::JoystickButton(&m_operatorController, 10);
+
+    frc2::POVButton(&m_operatorController, 0);
+    frc2::POVButton(&m_operatorController, 180);
 }
 
 void Robot::DisabledPeriodic()

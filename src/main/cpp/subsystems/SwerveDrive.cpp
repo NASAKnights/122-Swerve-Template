@@ -169,6 +169,7 @@ void SwerveDrive::SimulationPeriodic()
     m_simTimer.Reset();
     units::angle::degree_t delta = m_pigeon.GetAngularVelocityZWorld().GetValue() * dt;
     m_pigeonSim.AddYaw(delta);
+    PeriodicShuffleboard();
 }
 
 void SwerveDrive::Drive(frc::ChassisSpeeds speeds)
@@ -247,6 +248,7 @@ void SwerveDrive::SetSlow() {}
 frc::Rotation2d SwerveDrive::GetHeading()
 {
     return m_pigeon.GetRotation2d();
+    // return navx.GetRotation2d();
     // return navx.GetRotation2d();
 }
 
@@ -336,7 +338,8 @@ void SwerveDrive::UpdatePoseEstimate()
 
     if (resultStdDev.value.size() > 0)
     {
-        m_poseEstimator.SetVisionMeasurementStdDevs({resultStdDev.value[0], resultStdDev.value[1], resultStdDev.value[2]});
+        m_poseEstimator.SetVisionMeasurementStdDevs(
+            {resultStdDev.value[0], resultStdDev.value[1], resultStdDev.value[2]});
     }
     else
     {

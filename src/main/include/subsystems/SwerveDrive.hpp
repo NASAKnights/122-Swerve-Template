@@ -10,6 +10,7 @@
 #include <ctre/phoenix6/StatusSignal.hpp>
 #include <frc/RobotBase.h>
 #include <frc/SPI.h>
+#include <frc/Timer.h>
 #include <frc/controller/PIDController.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Pose3d.h>
@@ -22,6 +23,7 @@
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
+#include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
@@ -31,6 +33,7 @@
 #include <networktables/DoubleArrayTopic.h>
 #include <networktables/NetworkTableInstance.h>
 #include <string>
+#include <studica/AHRS.h>
 #include <wpi/array.h>
 #include <frc/Timer.h>
 #include "subsystems/PoseEstimator.h"
