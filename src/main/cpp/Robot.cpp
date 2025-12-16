@@ -22,6 +22,7 @@ void Robot::RobotInit()
     frc::SmartDashboard::PutString("POIName", "");
     frc::SmartDashboard::PutData("AddPOI", addPOICommand.get());
     frc::SmartDashboard::PutData("RemovePOI", removePOICommand.get());
+    frc::SmartDashboard::PutData("Set", autoWheelOffsetsCommand.get());
 
     autoChooser = pathplanner::AutoBuilder::buildAutoChooser();
 
@@ -246,60 +247,13 @@ void Robot::BindCommands()
             frc2::InstantCommand([this]
                                  { return m_swerveDrive.ResetHeading(); })));
 
-    // frc2::JoystickButton(&m_driverController, 5)
-    //     .WhileTrue(RunCoralOuttake(&m_CoralIntake).ToPtr());
-
-    // frc2::JoystickButton(&m_driverController, 2)
-    //     .OnTrue(frc2::CommandPtr(
-    //         frc2::InstantCommand([this]
-    //                              { return m_swerveDrive.SetOffsets(); })));
-
-    // frc2::JoystickButton(&m_driverController, 3)
-    // .WhileTrue(GoToPoint(&m_swerveDrive, &m_poiGenerator).ToPtr());
-
     frc2::JoystickButton(&m_driverController, 3)
         .OnTrue(scoreClosest.get())
         .OnFalse(frc2::CommandPtr(
             frc2::InstantCommand([this]
                                  { return m_pathfind.Cancel(); })));
 
-    // frc2::JoystickButton(&m_driverController, 3)
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             frc::SmartDashboard::PutBoolean("lifting elevator", true);
-    //             m_elevator.SetHeight(ElevatorConstants::upperLimit.value());
-    //             return;
-    //         })));
-
-    // frc2::JoystickButton(&m_driverController, 4)
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             frc::SmartDashboard::PutBoolean("lowering elevator", true);
-    //             m_elevator.SetHeight(ElevatorConstants::lowerLimit.value());
-    //             return;
-    //         })));
-
-    // frc2::JoystickButton(&m_driverController, 7)
-    //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             m_wrist.SetAngle(25);
-    //             return;
-    //         })))
-    //     .OnFalse((frc2::CommandPtr(frc2::InstantCommand(
-    //         [this]
-    //         {
-    //             m_wrist.SetAngle(60);
-    //             return;
-    //         }))));
-
     // --------------OPERATOR BUTTONS--------------------------------
-    /* frc2::JoystickButton(&m_operatorController, 1)
-        .OnTrue(frc2::CommandPtr(frc2::InstantCommand([this]
-                                                      { return exampleCommandHere(); })));
-    Example Button */
 
     // frc2::POVButton(&m_operatorController, 0) // Zero wrist
     //     .OnTrue(frc2::CommandPtr(frc2::InstantCommand(

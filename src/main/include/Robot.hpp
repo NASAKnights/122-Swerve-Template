@@ -39,6 +39,8 @@
 #include "subsystems/LEDController.h"
 #include "subsystems/Climber.h"
 
+#include "commands/AutoWheelOffsets.h"
+
 #include <cmath>
 
 class Robot : public frc::TimedRobot
@@ -121,6 +123,8 @@ private:
     frc2::CommandPtr removePOICommand = frc2::CommandPtr(frc2::InstantCommand([this]
                                                                               { return m_poiGenerator.RemovePOI(); }))
                                             .IgnoringDisable(true);
+
+    frc2::CommandPtr autoWheelOffsetsCommand = AutoWheelOffsets(&m_swerveDrive).ToPtr().IgnoringDisable(true);
 
     // Robot Container methods
     void CreateRobot();
