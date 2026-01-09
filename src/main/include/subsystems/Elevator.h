@@ -15,6 +15,7 @@
 // #include <rev/CANSparkMax.h>
 #include <rev/SparkMax.h>
 #include <units/angle.h>
+#include <units/dimensionless.h>
 #include <units/length.h>
 #include <units/mass.h>
 #include <units/time.h>
@@ -47,6 +48,11 @@ namespace ElevatorConstants
 
     static constexpr units::meter_t simUpperLimit = 57.1_in;
     static constexpr units::meter_t simLowerLimit = -0.1_in;
+
+    // simulation position and velocity standard deviations
+    static constexpr units::meter_t kSimEncoderPositionStdDev = 0.001_m;
+    static constexpr units::meter_t kSimHallPositionStdDev = 0.001_m;
+    static constexpr units::meters_per_second_t kSimVelocityStdDev = 0.01_mps;
 
     static constexpr units::meters_per_second_t kMaxVelocity = 60.0_in / 1_s;                      // 61.55
     static constexpr units::meters_per_second_squared_t kMaxAcceleration = 250.0_in / (1_s * 1_s); // 460_in / (1_s * 1_s);
@@ -138,7 +144,7 @@ namespace ElevatorConstants
     // TODO make these measurement and update values below
     static double kHallMagnetHeights[kHallMagnetHolderCount] = {0.0100, 0.1180, 0.3022, 0.7245};
 
-    static const bool kDisableHallSensor = true;
+    static const bool kDisableHallSensor = false;
 
     static double kMaxHallCalibration = 0.02;
 }
@@ -153,7 +159,6 @@ public:
     void printLog();
     // void Emergency_Stop();
     void SimulationPeriodic();
-    void SimulationInit();
     double GetHeight();
     void UseOutput(double output, State setpoint);
     units::meter_t GetMeasurement();
@@ -176,6 +181,7 @@ private:
     double GetEncoderVelocity(); // meters per second
     double GetHallHeight(double heightEstimate);
     double GetHallPWM();
+    double GetHallSimPWM();
     double GetProximityPWM();
     double GetHallPosition(double positionEstimate, int magnetCount);
     double InterpolatePWL(const double *xs, const double *ys, int count, double x);
@@ -200,9 +206,12 @@ private:
     ctre::phoenix6::hardware::CANdi m_candi;
 
     frc::Timer m_simTimer;
-    frc::Timer *m_timer;
 
     frc::sim::ElevatorSim m_elevatorSim;
+
+    std::default_random_engine m_randomGenerator;
+    std::normal_distribution<double> m_hallSimDistribution{0.0, ElevatorConstants::kSimHallPositionStdDev.value()};
+    std::normal_distribution<double> m_encoderSimDistribution{0.0, ElevatorConstants::kSimEncoderPositionStdDev.value()};
 
     ElevatorConstants::ElevatorState m_ElevatorState;
 

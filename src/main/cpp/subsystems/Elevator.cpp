@@ -29,7 +29,7 @@ Elevator::Elevator()
       m_elevatorSim(frc::DCMotor::NEO(ElevatorConstants::kNumMotors), ElevatorConstants::kElevatorGearing,
                     ElevatorConstants::kCarriageMass, ElevatorConstants::kElevatorDrumRadius,
                     ElevatorConstants::simLowerLimit, ElevatorConstants::simUpperLimit, false, 0_m,
-                    {0.0001})
+                    {0.0, 0.0})
 {
 
     m_encoderLeft.SetPosition(0.0);
@@ -54,6 +54,12 @@ Elevator::Elevator()
     m_ElevatorState = ElevatorConstants::ElevatorState::DISABLED;
     m_goal = 0.0_m;
     m_heightCorrection = ElevatorConstants::kInitialHeightCorrection.value();
+
+    if constexpr (frc::RobotBase::IsSimulation())
+    {
+        m_simTimer.Start();
+        frc::SmartDashboard::PutNumber("/Elevator/Tensioning", 0.0);
+    }
 }
 
 void Elevator::HoldPosition()
@@ -92,11 +98,6 @@ void ElevatorSubsystem::SetSpeed(double speed)
 
 double Elevator::GetHeight()
 {
-    if constexpr (frc::RobotBase::IsSimulation())
-    {
-        // frc::SmartDashboard::PutBoolean("isSim", true);
-        return m_elevatorSim.GetPosition().value();
-    }
     if (ElevatorConstants::kDisableHallSensor)
         return GetEncoderHeight();
     else
@@ -150,7 +151,14 @@ void Elevator::Periodic()
     }
 
     // update the hall sensor raw pwm measurement
-    m_hallPwm = GetHallPWM();
+    if constexpr (frc::RobotBase::IsSimulation())
+    {
+        m_hallPwm = GetHallSimPWM();
+    }
+    else
+    {
+        m_hallPwm = GetHallPWM();
+    }
     // update the proximity sensor raw pwm measurement
     double proxPwm = GetProximityPWM();
     // normalize to positive value from 0 to 1.0 in case candi is counting revolutions
@@ -244,14 +252,12 @@ void Elevator::Periodic()
     // This method will be called once per scheduler run.
     printLog();
 }
-void Elevator::SimulationInit()
-{
-    m_simTimer.Reset();
-}
 void Elevator::SimulationPeriodic()
 {
-    m_elevatorSim.Update(20_ms);
+    frc::SmartDashboard::PutNumber("/Elevator/Sim Timer", m_simTimer.Get().value());
+    m_elevatorSim.Update(m_simTimer.Get());
     m_simTimer.Reset();
+    frc::SmartDashboard::PutNumber("/Elevator/Sim Actual Height", m_elevatorSim.GetPosition().value());
 }
 void Elevator::UseOutput(double output, State setpoint)
 {
@@ -305,6 +311,15 @@ double Elevator::GetFusedHeight()
 
 double Elevator::GetEncoderHeight()
 {
+    if constexpr (frc::RobotBase::IsSimulation())
+    {
+        // see derivation in GetHallSimPWM()
+        double tensioning = frc::SmartDashboard::GetNumber("/Elevator/Tensioning", 0.0);
+        double stage1 = (m_elevatorSim.GetPosition().value() - tensioning) / 2.0;
+        // add random noise to the actual position of stage 1
+        return 2.0 * stage1 +
+               m_encoderSimDistribution(m_randomGenerator);
+    }
     // average the left and right encoder distance to get the encoder estimated height
     return ((GetEncoderDistance(m_encoderLeft) + GetEncoderDistance(m_encoderRight)) / 2.0).value();
 }
@@ -312,6 +327,10 @@ double Elevator::GetEncoderHeight()
 // returns the vertical velocity of the carriage (relative to ground)
 double Elevator::GetEncoderVelocity()
 {
+    if constexpr (frc::RobotBase::IsSimulation())
+    {
+        return m_elevatorSim.GetVelocity().value();
+    }
     // average the two encoder velocities (returns rpm)
     double rpm = (m_encoderLeft.GetVelocity() + m_encoderRight.GetVelocity()) / 2.0;
     return rpm / 60.0 * 2.0 * std::numbers::pi * ElevatorConstants::kElevatorDrumRadius.value() / ElevatorConstants::kElevatorGearing;
@@ -351,6 +370,60 @@ double Elevator::GetHallPWM()
 {
     ctre::phoenix6::StatusSignal<units::angle::turn_t> signal = m_candi.GetPWM1Position(true);
     return signal.GetValueAsDouble();
+}
+
+double Elevator::GetHallSimPWM()
+{
+    double tensioning = frc::SmartDashboard::GetNumber("/Elevator/Tensioning", 0.0);
+    /* assume elevator sim height is reality
+    actual_stage_2 = actual_stage_1 + tensioning
+    actual = actual_stage_1 + actual_stage_2
+    actual = 2 * actual_stage_1 + tensioning
+    actual_stage_1 = (actual - tensioning) / 2
+    actual_stage_2 = (actual - tensioning) / 2 + tensioning
+    actual_stage_2 = (actual + tensioning) / 2
+    */
+    double stage2_height = (m_elevatorSim.GetPosition().value() + tensioning) / 2.0;
+    // find the closest magnet holder using the sim height
+    double dist;
+    int index = -1;
+    double mindist = 1000.0;
+    for (int i = 0; i < ElevatorConstants::kHallMagnetHolderCount; i++)
+    {
+        dist = std::abs(stage2_height - ElevatorConstants::kHallMagnetHeights[i]);
+        if (dist < mindist)
+        {
+            mindist = dist;
+            index = i;
+        }
+    }
+    double position = stage2_height - ElevatorConstants::kHallMagnetHeights[index];
+    // add random noise
+    position += m_hallSimDistribution(m_randomGenerator);
+    int magnetCount = ElevatorConstants::kHallMagnetCounts[index];
+    double rot;
+    switch (magnetCount)
+    {
+    case 4:
+        // if the estimated position is outside the interpolation range, return no data
+        if (position < ElevatorConstants::kHall4PwlPosition[0] ||
+            position > ElevatorConstants::kHall4PwlPosition[ElevatorConstants::kHallPwlPoints - 1])
+            return 0.05;
+        rot = InterpolatePWL(ElevatorConstants::kHall4PwlPosition,
+                             ElevatorConstants::kHall4PwlAngle,
+                             ElevatorConstants::kHallPwlPoints, position);
+        break;
+    default:
+        // if the estimated position is outside the interpolation range, return no data
+        if (position < ElevatorConstants::kHall2PwlPosition[0] ||
+            position > ElevatorConstants::kHall2PwlPosition[ElevatorConstants::kHallPwlPoints - 1])
+            return 0.05;
+        rot = InterpolatePWL(ElevatorConstants::kHall2PwlPosition,
+                             ElevatorConstants::kHall2PwlAngle,
+                             ElevatorConstants::kHallPwlPoints, position);
+        break;
+    }
+    return rot * 0.8 + 0.1;
 }
 
 // gets the raw proximity value (duty cycle) from the candi
