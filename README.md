@@ -1,58 +1,34 @@
-# 122 Reefscape 2025 Code Base
+# NKSwerve
 
-This is the code base for FRC 2025 Reefscape Game for Team 122 NASA Knights
+A C++ vendor library for FRC swerve drivetrain control, structured like
+[`wpilibsuite/vendor-template`](https://github.com/wpilibsuite/vendor-template)'s
+`2027` branch. Motors, steer actuators, and the gyro are all injected via
+interfaces (`IDriveMotor`, `ISteerMotor`, `IGyroSource`) — `NKSwerve` itself
+depends on WPILib only, never a specific hardware vendor.
 
-# General Robot Specs
+See [`docs/superpowers/specs/2026-07-20-nkswerve-vendor-library-design.md`](docs/superpowers/specs/2026-07-20-nkswerve-vendor-library-design.md)
+for the full library design, and
+[`docs/superpowers/specs/2026-08-03-nkswerve-build-scaffolding-migration-design.md`](docs/superpowers/specs/2026-08-03-nkswerve-build-scaffolding-migration-design.md)
+for how the project is structured and built.
 
-TBD: ???
+## Building
 
+```bash
+cd NKSwerve
+./gradlew build
+```
 
-# Changelog
+## Installing in a robot project
 
-### Updated 2/22/25
+```bash
+cd NKSwerve
+./gradlew publishToMavenLocal
+```
 
-- Intake for both Coral and Algae have been merged into main
-- LED Controller has been merged into main
-- Current version of Visual Servoing has been merged into main
-- Climber Subsystem has been merged into main
+Then, in a consuming robot project's `build.gradle`, add `mavenLocal()` to
+`repositories`, and drop `NKSwerve/build/repos/NKSwerve.json` into that
+project's `vendordeps/` directory.
 
-### Updated 2/1/25
+## License
 
-- Elevator code has been merged into main
-- Elevator code works with running the elevator in the correct direction but with no load at the moment
-- PID values for swerve steering have been tuned
-- Some libraries have been updated to new version
-
-### Updated 1/28/25
-
-- Persistent Constants only work with the 2024 version of Shuffleboard, network tables are still intact but interaction with values differ between 2025 Shuffleboard and 2024 Shuffleboard
-- Skeleton code of various commands generated and added. Will need to modify in the future as robot develops
-- High level commands are written as sequential commands groups, state machines may still need to be implemented
-- Initial swerve drive offsets have been generated, will need more calibration for autos. PID values need to be tuned.
-
-### Updated 1/21/25
-
-- Merged Persistent Constants branch into main
-- Robot is now able to change wheels to different offsets and stay persistant between restarts/reboots
-- Updated libraries
-
-### Updated 1/11/25
-
-- Updated to the new WPILib version 2025.2.1
-- Removed the Util folder due to NKTrajectory and NKTrajectoryManager not working with the gradle build
-- **Note:** New WPILib with cpp needs 17.9+ compiler, please update accordingly
-- Updated Vendor libraries
-- **Note:** Navx vendor library has changed to Studica
-- Calibrate Function has been removed due to library changes
-- How the Navx is instantiated is changed as well
-#### CTRE Changes
-- Pigeon has changed to GetYaw(), read specs as rotation direction has changed
-- CurrentSupplyConfig values have changed definition, updated accordingly
-- SupplyCurrentLowerLimit seems to be the new ContinuousCurrentLimit **TODO: CHECK**
-- SupplyCurrentLimit seems to be the new PeakLimit **TODO: CHECK BEFORE RUNNING**
-- SupplyCurrentLowerTime seems to be the new SupplyTimeThreshold **TODO: CHECK BEFORE RUNNING**
-#### SwerveDriveModule
-- Optimize function has changed
-#### Pathplanner
-- Changes to how the SwerveAutoBuilder is instantiated
-- File paths for include have been updated and removed as necessary
+See [`WPILib-License.md`](WPILib-License.md).
