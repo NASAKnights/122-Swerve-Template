@@ -52,7 +52,8 @@ testbed/
 │   └── hardware/
 │       ├── Pigeon2Gyro.h
 │       ├── TalonFXDriveMotor.h
-│       └── TalonFXSteerMotor.h
+│       ├── TalonFXSteerMotor.h
+│       └── WpiPriorityMutex.h
 └── src/main/cpp/
     ├── Robot.cpp
     ├── subsystems/
@@ -60,7 +61,8 @@ testbed/
     └── hardware/
         ├── Pigeon2Gyro.cpp
         ├── TalonFXDriveMotor.cpp
-        └── TalonFXSteerMotor.cpp
+        ├── TalonFXSteerMotor.cpp
+        └── WpiPriorityMutex.cpp
 ```
 
 `testbed/` is added alongside `NKSwerve/` at the repo root (which by this point
@@ -109,6 +111,15 @@ itself has zero vendor dependencies.
   gearbox and feeds both the TalonFX's and the CANcoder's `SimState` so fused
   feedback stays consistent in simulation.
 
+### `WpiPriorityMutex : NKSwerve::IMutex`
+
+Not CTRE-related (unlike the three above) — it's the concrete lock `DriveSubsystem`
+registers with `NKSwerve::SwerveDrive` for its internal command notice board (see the
+vendor library spec's "Synchronization abstraction"). A thin wrapper around
+`wpi::priority_mutex`, so the lock guarding `SwerveDrive`'s posted `ChassisSpeeds` gets
+priority inheritance on the RoboRIO's RT kernel: `Lock()`/`Unlock()` forward directly
+to the underlying `wpi::priority_mutex`'s `lock()`/`unlock()`.
+
 ## `Constants.h`
 
 Generic placeholder values (explicitly **not** team 122's real hardware numbers —
@@ -145,11 +156,12 @@ namespace DriveConstants {
 
 `DriveSubsystem : public frc2::SubsystemBase` — the one subsystem `Robot.cpp`
 actually talks to. Its constructor builds four `TalonFXDriveMotor`/
-`TalonFXSteerMotor` pairs and a `Pigeon2Gyro` from `Constants.h`, computes each
-module's `frc::Translation2d` from track width/wheelbase (same ± pattern as
-today's `kFrontLeftPosition` etc.), assembles an `NKSwerve::SwerveDriveConfig`, and
-constructs an internal `NKSwerve::SwerveDrive` member (composition — the inner
-`SwerveDrive` is never itself registered with the `CommandScheduler`).
+`TalonFXSteerMotor` pairs, a `Pigeon2Gyro`, and a `WpiPriorityMutex` from
+`Constants.h`, computes each module's `frc::Translation2d` from track width/wheelbase
+(same ± pattern as today's `kFrontLeftPosition` etc.), assembles an
+`NKSwerve::SwerveDriveConfig`, and constructs an internal `NKSwerve::SwerveDrive`
+member (composition — the inner `SwerveDrive` is never itself registered with the
+`CommandScheduler`) passing it the gyro and mutex.
 
 Public surface: `Drive(frc::ChassisSpeeds)`, `GetPose()`, `ResetPose(frc::Pose2d)`,
 `GetHeading()`, `ResetHeading()`. `DriveSubsystem::Periodic()` and
