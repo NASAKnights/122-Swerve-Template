@@ -1,0 +1,27 @@
+{
+    "fileName": "NKSwerve.json",
+    "name": "NKSwerve",
+    "version": "${version}",
+    "frcYear": "2027",
+    "uuid": "8942ea4d-5e06-474b-b937-885212c33efe",
+    "mavenUrls": [],
+    "jsonUrl": "",
+    "cppDependencies": [
+        {
+            "groupId": "${groupId}",
+            "artifactId": "${artifactId}",
+            "version": "${version}",
+            "libName": "NKSwerve",
+            "headerClassifier": "headers",
+            "sharedLibrary": false,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxsystemcore",
+                "linuxarm64",
+                "windowsx86-64",
+                "linuxx86-64",
+                "osxuniversal"
+            ]
+        }
+    ]
+}

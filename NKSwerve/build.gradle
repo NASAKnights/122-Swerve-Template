@@ -1,0 +1,66 @@
+import org.wpilib.toolchain.*
+
+plugins {
+  id 'cpp'
+  id 'google-test'
+  id 'org.wpilib.WPILibRepositoriesPlugin' version '2027.0.0'
+  id 'org.wpilib.NativeUtils' version '2027.13.1'
+  id 'org.wpilib.GradleVsCode' version '2027.0.0'
+}
+
+ext.wpilibVersion = "2027.+"
+
+repositories {
+  mavenCentral()
+}
+wpilibRepositories.use2027Repos()
+if (project.hasProperty('releaseMode')) {
+  wpilibRepositories.addAllReleaseRepositories(project)
+} else {
+  wpilibRepositories.addAllDevelopmentRepositories(project)
+}
+
+apply from: 'config.gradle'
+
+nativeUtils {
+  exportsConfigs {
+    NKSwerve {
+    }
+  }
+}
+
+model {
+  components {
+    NKSwerve(NativeLibrarySpec) {
+      sources {
+        cpp {
+          source {
+            srcDirs 'src/main/native/cpp'
+            include '**/*.cpp'
+          }
+          exportedHeaders {
+            srcDirs 'src/main/native/include'
+          }
+        }
+      }
+      nativeUtils.useRequiredLibrary(it, 'wpilib_shared')
+    }
+  }
+  testSuites {
+    NKSwerveTest {
+        sources.cpp {
+            source {
+                srcDir 'src/test/native/cpp'
+                include '**/*.cpp'
+            }
+        }
+        nativeUtils.useRequiredLibrary(it, "wpilib_shared", "googletest_static")
+    }
+  }
+}
+
+apply from: 'publish.gradle'
+
+wrapper {
+  gradleVersion = '9.4.1'
+}
